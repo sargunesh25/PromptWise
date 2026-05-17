@@ -16,16 +16,26 @@ const DAILY_LIMIT = 3;
 const LIMIT_KEY = "promptwise_daily_prompts";
 
 function getDailyUsage() {
+  if (typeof window === "undefined") return 0;
   const today = new Date().toDateString();
-  const stored = JSON.parse(localStorage.getItem(LIMIT_KEY) || "{}");
-  if (stored.date !== today) return 0;
-  return stored.count || 0;
+  try {
+    const stored = JSON.parse(localStorage.getItem(LIMIT_KEY) || "{}");
+    if (stored.date !== today) return 0;
+    return stored.count || 0;
+  } catch {
+    return 0;
+  }
 }
 
 function incrementDailyUsage() {
+  if (typeof window === "undefined") return 0;
   const today = new Date().toDateString();
   const count = getDailyUsage() + 1;
-  localStorage.setItem(LIMIT_KEY, JSON.stringify({ date: today, count }));
+  try {
+    localStorage.setItem(LIMIT_KEY, JSON.stringify({ date: today, count }));
+  } catch {
+    return count;
+  }
   return count;
 }
 
@@ -291,8 +301,11 @@ Now generate the final optimized prompt following your exact response format.`;
     }
   };
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

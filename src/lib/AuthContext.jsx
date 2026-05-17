@@ -20,14 +20,38 @@ export const AuthProvider = ({ children }) => {
 
     setAuthError(null);
 
-    const { data: profile, error } = await supabase
-      .from("profiles")
-      .select("full_name, role, created_at")
-      .eq("id", authUser.id)
-      .single();
+    let profile = null;
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("full_name, role, created_at")
+        .eq("id", authUser.id)
+        .single();
 
-    if (error) {
-      setAuthError({ type: "user_not_registered", message: "Profile not found" });
+      if (error) {
+        // PGRST116 = "no rows found" — the profile genuinely doesn't exist
+        const isNotFound =
+          error.code === "PGRST116" ||
+          error.message?.includes("no rows") ||
+          error.details?.includes("0 rows");
+
+        if (isNotFound) {
+          console.warn("[Auth] Profile not found for user:", authUser.id);
+          setAuthError({ type: "user_not_registered", message: "Profile not found" });
+          setUser(null);
+          setIsAuthenticated(false);
+          return;
+        }
+
+        // Any other error (network, RLS, timeout) — log it but don't block auth.
+        // Fall through and use fallback data from the auth token.
+        console.warn("[Auth] Profile fetch failed (non-fatal):", error.message);
+      } else {
+        profile = data;
+      }
+    } catch (fetchError) {
+      // Network-level failure — still authenticate with fallback data
+      console.warn("[Auth] Profile fetch threw (non-fatal):", fetchError);
     }
 
     setUser({
@@ -42,70 +66,120 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (!hasSupabaseConfig) {
+    let isMounted = true;
+    let resolved = false;
+    let listenerCleanup = null;
+
+    const markReady = () => {
+      if (!isMounted || resolved) return;
+      resolved = true;
       setIsLoadingAuth(false);
       setAuthChecked(true);
+    };
+
+    if (!hasSupabaseConfig) {
+      markReady();
       return;
     }
 
-    const bootstrapAuth = async () => {
-      try {
-        const { data, error } = await supabase.auth.getSession();
-        if (error) {
-          throw error;
-        }
+    // Safety timeout — never show spinner for more than 5s
+    const safetyTimer = setTimeout(() => {
+      if (!resolved) {
+        console.warn("[Auth] Session restore timed out after 5s");
+        markReady();
+      }
+    }, 5000);
 
-        setSession(data.session);
-        if (data.session?.user) {
-          await hydrateUser(data.session.user);
+    // Clean up stale localStorage entries from old Supabase projects
+    try {
+      const currentRef = import.meta.env.VITE_SUPABASE_URL?.match(
+        /https:\/\/([^.]+)\.supabase/
+      )?.[1];
+      if (currentRef) {
+        Object.keys(localStorage).forEach((key) => {
+          if (
+            key.startsWith("sb-") &&
+            key.endsWith("-auth-token") &&
+            !key.includes(currentRef)
+          ) {
+            console.log("[Auth] Removing stale session key:", key);
+            localStorage.removeItem(key);
+          }
+        });
+      }
+    } catch (_) {
+      // ignore
+    }
+
+    const init = async () => {
+      try {
+        // Step 1: Explicitly restore session from localStorage
+        const {
+          data: { session: restoredSession },
+          error: sessionError,
+        } = await supabase.auth.getSession();
+
+        console.log(
+          "[Auth] getSession result:",
+          !!restoredSession?.user,
+          sessionError?.message || "no error"
+        );
+
+        if (!isMounted) return;
+
+        if (restoredSession?.user) {
+          setSession(restoredSession);
+          await hydrateUser(restoredSession.user);
         } else {
           setUser(null);
           setIsAuthenticated(false);
         }
-      } catch (error) {
-        setSession(null);
-        setUser(null);
-        setIsAuthenticated(false);
-        setAuthError({
-          type: "auth_init_failed",
-          message: error?.message || "Failed to initialize authentication.",
-        });
+      } catch (err) {
+        console.error("[Auth] getSession failed:", err);
       } finally {
-        setIsLoadingAuth(false);
-        setAuthChecked(true);
+        markReady();
       }
-    };
 
-    bootstrapAuth();
+      // Step 2: Subscribe to live auth events (sign-in, sign-out, token refresh)
+      const { data: listener } = supabase.auth.onAuthStateChange(
+        async (event, nextSession) => {
+          if (!isMounted) return;
+          // Skip the initial event — we already handled it via getSession()
+          if (event === "INITIAL_SESSION") return;
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      async (_event, nextSession) => {
-        try {
-          setSession(nextSession);
-          setAuthError(null);
-          if (nextSession?.user) {
-            await hydrateUser(nextSession.user);
-          } else {
+          console.log("[Auth] onAuthStateChange:", event, !!nextSession?.user);
+
+          try {
+            setSession(nextSession);
+            if (nextSession?.user) {
+              await hydrateUser(nextSession.user);
+            } else {
+              setUser(null);
+              setIsAuthenticated(false);
+              setAuthError(null);
+            }
+          } catch (error) {
+            console.error("[Auth] hydration error:", error);
+            setSession(null);
             setUser(null);
             setIsAuthenticated(false);
+            setAuthError({
+              type: "auth_state_failed",
+              message:
+                error?.message || "Authentication state update failed.",
+            });
           }
-        } catch (error) {
-          setSession(null);
-          setUser(null);
-          setIsAuthenticated(false);
-          setAuthError({
-            type: "auth_state_failed",
-            message: error?.message || "Authentication state update failed.",
-          });
-        } finally {
-          setIsLoadingAuth(false);
-          setAuthChecked(true);
         }
-      }
-    );
+      );
+      listenerCleanup = listener;
+    };
+
+    init();
 
     return () => {
-      listener.subscription.unsubscribe();
+      isMounted = false;
+      clearTimeout(safetyTimer);
+      listenerCleanup?.subscription?.unsubscribe();
     };
   }, [hydrateUser]);
 
