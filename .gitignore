@@ -11,6 +11,9 @@ dist/
 build/
 .vite/
 
+# Supabase local metadata
+supabase/.temp/
+
 # logs
 logs/
 *.log
