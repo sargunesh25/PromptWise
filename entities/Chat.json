@@ -1,0 +1,18 @@
+{
+  "name": "Chat",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Auto-generated title from first message"
+    },
+    "is_favourite": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the chat is starred"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

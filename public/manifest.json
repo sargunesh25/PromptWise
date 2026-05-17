@@ -1,0 +1,9 @@
+{
+  "name": "PromptWise",
+  "short_name": "PromptWise",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f3ee",
+  "theme_color": "#141414",
+  "icons": []
+}
