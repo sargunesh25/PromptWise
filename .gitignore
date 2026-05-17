@@ -28,6 +28,7 @@ pnpm-debug.log*
 tmp/
 temp/
 *.tsbuildinfo
+.wrangler/
 
 # test coverage
 coverage/
