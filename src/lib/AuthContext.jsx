@@ -48,27 +48,59 @@ export const AuthProvider = ({ children }) => {
       return;
     }
 
-    supabase.auth.getSession().then(async ({ data }) => {
-      setSession(data.session);
-      if (data.session?.user) {
-        await hydrateUser(data.session.user);
-      }
-      setIsLoadingAuth(false);
-      setAuthChecked(true);
-    });
+    const bootstrapAuth = async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) {
+          throw error;
+        }
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      async (_event, nextSession) => {
-        setSession(nextSession);
-        setAuthError(null);
-        if (nextSession?.user) {
-          await hydrateUser(nextSession.user);
+        setSession(data.session);
+        if (data.session?.user) {
+          await hydrateUser(data.session.user);
         } else {
           setUser(null);
           setIsAuthenticated(false);
         }
+      } catch (error) {
+        setSession(null);
+        setUser(null);
+        setIsAuthenticated(false);
+        setAuthError({
+          type: "auth_init_failed",
+          message: error?.message || "Failed to initialize authentication.",
+        });
+      } finally {
         setIsLoadingAuth(false);
         setAuthChecked(true);
+      }
+    };
+
+    bootstrapAuth();
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      async (_event, nextSession) => {
+        try {
+          setSession(nextSession);
+          setAuthError(null);
+          if (nextSession?.user) {
+            await hydrateUser(nextSession.user);
+          } else {
+            setUser(null);
+            setIsAuthenticated(false);
+          }
+        } catch (error) {
+          setSession(null);
+          setUser(null);
+          setIsAuthenticated(false);
+          setAuthError({
+            type: "auth_state_failed",
+            message: error?.message || "Authentication state update failed.",
+          });
+        } finally {
+          setIsLoadingAuth(false);
+          setAuthChecked(true);
+        }
       }
     );
 
