@@ -9,7 +9,16 @@ import { useAuth } from "@/lib/AuthContext";
 export default function Navbar({ onToggleSidebar, showSidebar, hideNav }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const [templatesNavContext, setTemplatesNavContext] = useState(() => {
+    if (typeof window === "undefined") return "landing";
+    return window.sessionStorage.getItem("templates_nav_context") || "landing";
+  });
+  const isTemplatesPage = location.pathname === "/templates";
   const isAppPage = location.pathname === "/app";
+  const isAppNav =
+    isAppPage ||
+    location.pathname === "/profile" ||
+    (isTemplatesPage && templatesNavContext === "app");
   const { user, isAuthenticated, navigateToLogin, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -43,10 +52,17 @@ export default function Navbar({ onToggleSidebar, showSidebar, hideNav }) {
     }
   };
 
+  const setNavContext = (context) => {
+    setTemplatesNavContext(context);
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem("templates_nav_context", context);
+    }
+  };
+
   // Hide navbar when a modal/popup is open
   if (hideNav) return null;
 
-  if (isAppPage) {
+  if (isAppNav) {
     return (
       <>
         <LimitModal open={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
@@ -69,10 +85,26 @@ export default function Navbar({ onToggleSidebar, showSidebar, hideNav }) {
 
           {/* Center: Chat + Templates */}
           <div className="flex-1 flex items-center justify-center gap-6">
-            <Link to="/app" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              to="/app"
+              onClick={() => setNavContext("app")}
+              className={`text-sm transition-colors pb-1 border-b-2 ${
+                isAppPage
+                  ? "text-foreground border-black"
+                  : "text-muted-foreground border-transparent hover:text-foreground"
+              }`}
+            >
               Chat
             </Link>
-            <Link to="/templates" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              to="/templates"
+              onClick={() => setNavContext("app")}
+              className={`text-sm transition-colors pb-1 border-b-2 ${
+                isTemplatesPage
+                  ? "text-foreground border-black"
+                  : "text-muted-foreground border-transparent hover:text-foreground"
+              }`}
+            >
               Templates
             </Link>
           </div>
@@ -150,7 +182,15 @@ export default function Navbar({ onToggleSidebar, showSidebar, hideNav }) {
 
         {/* Center: nav links — truly centered */}
         <div className="flex-1 flex items-center justify-center gap-8">
-          <Link to="/templates" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link
+            to="/templates"
+            onClick={() => setNavContext("landing")}
+            className={`text-sm transition-colors pb-1 border-b-2 ${
+              isTemplatesPage
+                ? "text-foreground border-black"
+                : "text-muted-foreground border-transparent hover:text-foreground"
+            }`}
+          >
             Templates
           </Link>
           <Link to="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -230,7 +270,16 @@ export default function Navbar({ onToggleSidebar, showSidebar, hideNav }) {
 
       {mobileMenuOpen && (
         <div className="md:hidden border-b border-border bg-background px-4 py-4 space-y-3">
-          <Link to="/templates" className="block text-sm text-muted-foreground hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>Templates</Link>
+          <Link
+            to="/templates"
+            className="block text-sm text-muted-foreground hover:text-foreground"
+            onClick={() => {
+              setNavContext("landing");
+              setMobileMenuOpen(false);
+            }}
+          >
+            Templates
+          </Link>
           <Link to="/pricing" className="block text-sm text-muted-foreground hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>Pricing</Link>
           <Button size="sm" className="rounded-full bg-foreground text-background hover:bg-foreground/90 text-xs w-full" onClick={() => { handleGetStarted(); setMobileMenuOpen(false); }}>
             Get Started
