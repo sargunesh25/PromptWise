@@ -24,7 +24,7 @@ export default function InputBar({ value, onChange, onSubmit, loading, disabled,
       {limitExceeded && (
         <div className="mb-2 flex items-center justify-between bg-card border border-border rounded-xl px-4 py-2.5 shadow-sm">
           <p className="text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground">Limit reached.</span> Enjoy unlimited prompts with{" "}
+            <span className="font-semibold text-foreground">Limit reached.</span> Enjoy unlimited recommendations with{" "}
             <span className="text-foreground font-semibold">Pro</span>
           </p>
           <button
@@ -45,7 +45,7 @@ export default function InputBar({ value, onChange, onSubmit, loading, disabled,
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={limitExceeded ? "Daily limit reached — upgrade for unlimited prompts" : "Describe what you want to prompt..."}
+          placeholder={limitExceeded ? "Daily limit reached — upgrade for unlimited recommendations" : "Describe what you want to buy and why..."}
           rows={1}
           disabled={loading || disabled}
           onClick={() => { if (limitExceeded) onShowLimit?.(); }}

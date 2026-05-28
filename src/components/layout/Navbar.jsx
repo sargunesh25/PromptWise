@@ -40,8 +40,10 @@ export default function Navbar({ onToggleSidebar, showSidebar, hideNav }) {
     return user.full_name.charAt(0).toUpperCase();
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    setUserMenuOpen(false);
+    await logout();
+    navigate("/");
   };
 
   const handleGetStarted = async () => {
@@ -83,7 +85,7 @@ export default function Navbar({ onToggleSidebar, showSidebar, hideNav }) {
             </Link>
           </div>
 
-          {/* Center: Chat + Templates */}
+          {/* Center: Advisor + Categories */}
           <div className="flex-1 flex items-center justify-center gap-6">
             <Link
               to="/app"
@@ -94,7 +96,7 @@ export default function Navbar({ onToggleSidebar, showSidebar, hideNav }) {
                   : "text-muted-foreground border-transparent hover:text-foreground"
               }`}
             >
-              Chat
+              Advisor
             </Link>
             <Link
               to="/templates"
@@ -105,7 +107,7 @@ export default function Navbar({ onToggleSidebar, showSidebar, hideNav }) {
                   : "text-muted-foreground border-transparent hover:text-foreground"
               }`}
             >
-              Templates
+              Categories
             </Link>
           </div>
 

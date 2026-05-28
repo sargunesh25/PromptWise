@@ -184,8 +184,20 @@ export const AuthProvider = ({ children }) => {
   }, [hydrateUser]);
 
   const logout = async () => {
+    // Immediately clear local auth state so UI reflects logout instantly.
+    setSession(null);
+    setUser(null);
+    setIsAuthenticated(false);
+    setAuthError(null);
+
     if (!hasSupabaseConfig) return;
-    await supabase.auth.signOut();
+
+    try {
+      // Local scope avoids waiting on cross-device/global revocation.
+      await supabase.auth.signOut({ scope: "local" });
+    } catch (error) {
+      console.warn("[Auth] signOut failed:", error);
+    }
   };
 
   const navigateToLogin = async () => {

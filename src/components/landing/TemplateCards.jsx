@@ -3,12 +3,12 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Pen, Code2, Briefcase, Image, Search, Megaphone } from "lucide-react";
 
 const templates = [
-  { category: "Content Writing", icon: Pen, preview: "Generate blog posts, ad copy, social media captions that convert..." },
-  { category: "Code Review", icon: Code2, preview: "Get detailed code reviews, refactoring suggestions, and best practices..." },
-  { category: "Business Strategy", icon: Briefcase, preview: "Create business plans, market analysis, competitive strategies..." },
-  { category: "Image Generation", icon: Image, preview: "Craft detailed prompts for Midjourney, DALL·E, Stable Diffusion..." },
-  { category: "Research", icon: Search, preview: "Deep-dive research prompts for academic papers, market reports..." },
-  { category: "Marketing", icon: Megaphone, preview: "Email campaigns, funnel copy, brand positioning, growth tactics..." },
+  { category: "Laptops", icon: Code2, preview: "Best laptop under a budget for coding, battery, and daily use..." },
+  { category: "Skincare", icon: Pen, preview: "Find the right product for oily skin, acne control, and sensitivity..." },
+  { category: "Headphones", icon: Image, preview: "Office + travel picks balancing comfort, ANC, and mic quality..." },
+  { category: "Shoes", icon: Briefcase, preview: "Running + daily wear options with cushioning and durability..." },
+  { category: "Smartwatches", icon: Search, preview: "Fitness tracking with battery and display priorities..." },
+  { category: "Home Appliances", icon: Megaphone, preview: "Value-for-money picks with warranty, energy, and capacity..." },
 ];
 
 export default function TemplateCards() {
@@ -21,7 +21,7 @@ export default function TemplateCards() {
           viewport={{ once: true }}
           className="text-2xl md:text-3xl font-bold text-foreground text-center mb-16"
         >
-          Popular prompt templates
+          Popular decision categories
         </motion.h2>
 
         <div className="relative flex flex-wrap justify-center gap-4">

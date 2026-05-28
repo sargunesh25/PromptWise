@@ -3,9 +3,9 @@ import { motion } from "framer-motion";
 import { MessageSquare, HelpCircle, Sparkles } from "lucide-react";
 
 const steps = [
-  { icon: MessageSquare, title: "Describe", desc: "Tell us what you want to create or achieve with AI." },
-  { icon: HelpCircle, title: "Clarify", desc: "We ask smart questions to understand your exact needs." },
-  { icon: Sparkles, title: "Get Prompt", desc: "Receive an optimized, ready-to-use prompt with model recommendations." },
+  { icon: MessageSquare, title: "Describe", desc: "Share your exact need, budget, and must-haves." },
+  { icon: HelpCircle, title: "Compare", desc: "We match and rank products across brands based on fit." },
+  { icon: Sparkles, title: "Decide", desc: "Get the best pick with clear reasons and smart alternatives." },
 ];
 
 export default function HowItWorks() {

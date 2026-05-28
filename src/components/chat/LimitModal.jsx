@@ -12,9 +12,9 @@ export const plans = [
     highlight: true,
     badge: "Most Popular",
     features: [
-      "Unlimited prompts",
-      "Multi-step workflow builder",
-      "Priority model recommendations",
+      "Unlimited recommendations",
+      "Multi-step decision flow",
+      "Priority comparison insights",
       "Favourites & history",
     ],
   },
@@ -27,7 +27,7 @@ export const plans = [
       "Everything in Pro",
       "5 seats included",
       "API access",
-      "Custom templates",
+      "Custom decision guides",
     ],
   },
 ];
@@ -66,7 +66,7 @@ export default function LimitModal({ open, onClose }) {
               </div>
               <h2 className="text-xl font-bold text-foreground">Upgrade to PromptWise Pro</h2>
               <p className="text-sm text-muted-foreground mt-2">
-                You've used your 3 free prompts for today. Upgrade for unlimited access.
+                You've used your 3 free recommendations for today. Upgrade for unlimited access.
               </p>
             </div>
 

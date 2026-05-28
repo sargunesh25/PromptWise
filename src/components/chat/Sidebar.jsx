@@ -39,7 +39,7 @@ export default function Sidebar({ chats, activeChat, onSelectChat, onNewChat, on
           className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-border hover:bg-sidebar-accent text-sm text-foreground transition-colors"
         >
           <Plus className="w-4 h-4" />
-          New Chat
+          New Decision
         </button>
       </div>
 
@@ -49,7 +49,7 @@ export default function Sidebar({ chats, activeChat, onSelectChat, onNewChat, on
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search chats..."
+            placeholder="Search decisions..."
             className="w-full bg-input rounded-lg pl-8 pr-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
           />
         </div>
@@ -103,7 +103,7 @@ export default function Sidebar({ chats, activeChat, onSelectChat, onNewChat, on
           >
             {showRecent ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
             <Clock className="w-3 h-3" />
-            Recent Chats
+            Recent Decisions
           </button>
           <AnimatePresence>
             {showRecent && (
@@ -114,7 +114,7 @@ export default function Sidebar({ chats, activeChat, onSelectChat, onNewChat, on
                 className="overflow-hidden"
               >
                 {recent.length === 0 ? (
-                  <p className="text-[11px] text-muted-foreground pl-6 py-2">No chats yet</p>
+                  <p className="text-[11px] text-muted-foreground pl-6 py-2">No decisions yet</p>
                 ) : (
                   <div className="space-y-0.5 mt-1">
                     {recent.map((chat) => (

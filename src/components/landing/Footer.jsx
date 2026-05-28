@@ -15,7 +15,7 @@ export default function Footer() {
         <div className="flex items-center gap-6">
           <Link to="/templates" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Templates</Link>
           <Link to="/pricing" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Pricing</Link>
-          <span className="text-xs text-muted-foreground">© 2025 PromptWise</span>
+          <span className="text-xs text-muted-foreground">© 2026 PromptWise</span>
         </div>
       </div>
     </footer>

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Copy, Check } from "lucide-react";
 import { motion } from "framer-motion";
-import QuizFlow from "./QuizFlow";
 
 export default function MessageBubble({ message, onQuizComplete }) {
   const [copied, setCopied] = useState(false);
@@ -28,33 +27,7 @@ export default function MessageBubble({ message, onQuizComplete }) {
     );
   }
 
-  // Quiz block — questions array pre-fetched
-  if (message.type === "quiz" && message.questions) {
-    return (
-      <QuizFlow
-        questions={message.questions}
-        onComplete={onQuizComplete}
-      />
-    );
-  }
-
-  // Completed quiz summary (locked)
-  if (message.type === "quiz_done") {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-[85%] space-y-2"
-      >
-        {message.summary?.map((item, i) => (
-          <div key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-            <span className="text-foreground font-medium shrink-0">{i + 1}.</span>
-            <span><span className="text-foreground/70">{item.q}</span> → <span className="text-foreground font-medium">{item.a}</span></span>
-          </div>
-        ))}
-      </motion.div>
-    );
-  }
+  const _unused = onQuizComplete;
 
   // Regular assistant message
   return (

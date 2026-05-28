@@ -21,14 +21,14 @@ export default function HeroSection() {
         className="text-center max-w-3xl mx-auto"
       >
         <span className="inline-block text-[11px] font-semibold uppercase tracking-widest text-muted-foreground border border-border rounded-full px-4 py-1.5 mb-8">
-          AI Prompt Engineering
+          AI Shopping Decision Engine
         </span>
 
         <h1 className="text-4xl md:text-6xl font-bold text-foreground tracking-tight leading-tight">
-          What do you want to prompt?
+          Find the right product for you, fast.
         </h1>
         <p className="mt-6 text-muted-foreground text-base md:text-lg max-w-xl mx-auto">
-          Describe your goal. We'll generate the perfect prompt for any AI.
+          Tell us your need, budget, and preferences. We compare options and explain the best pick in plain language.
         </p>
       </motion.div>
 
@@ -43,7 +43,7 @@ export default function HeroSection() {
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Describe what you want to create or achieve..."
+            placeholder="Describe what you want to buy and why..."
             rows={3}
             className="w-full bg-transparent px-4 pt-4 pb-12 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none"
             onKeyDown={(e) => {

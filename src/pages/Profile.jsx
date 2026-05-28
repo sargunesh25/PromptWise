@@ -12,6 +12,10 @@ export default function Profile() {
   const [chatCount, setChatCount] = useState(0);
   const [favCount, setFavCount] = useState(0);
   const navigate = useNavigate();
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+  };
 
   useEffect(() => {
     if (!user?.id || !supabase) return;
@@ -117,7 +121,7 @@ export default function Profile() {
             </Button>
             <Button
               className="flex-1 rounded-xl bg-destructive text-white hover:bg-destructive/85 h-11"
-              onClick={logout}
+              onClick={handleLogout}
             >
               <LogOut className="w-4 h-4 mr-2" />
               Log Out
