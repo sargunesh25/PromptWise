@@ -1,41 +1,49 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Wand2, Target, BarChart3 } from "lucide-react";
+import { AlertTriangle, Braces, Network, Quote, Rows3, Workflow } from "lucide-react";
 
 const features = [
-  { icon: Wand2, title: "Need-First Recommendations", desc: "We capture your use case, budget, and preferences before comparing products." },
-  { icon: Target, title: "Smarter Comparisons", desc: "Specs, reviews, and value are weighed to rank the best fit, not just the popular ones." },
-  { icon: BarChart3, title: "Clear Trade-Offs", desc: "Every pick comes with simple reasons, alternatives, and what you gain or give up." },
+  { icon: Rows3, title: "Multi-source aggregation", desc: "Pull academic papers, patents, trial records, filings, news, and regulatory data into one evidence set." },
+  { icon: Network, title: "Deduplication & linking", desc: "Collapse repeated findings and show which sources corroborate or depend on the same claims." },
+  { icon: AlertTriangle, title: "Contradiction detection", desc: "Highlight where studies, filings, or market signals disagree so teams see uncertainty early." },
+  { icon: Quote, title: "Claim-level citations", desc: "Keep provenance attached to the answer with source titles, IDs, dates, and direct links." },
+  { icon: Workflow, title: "Domain workflows", desc: "Package synthesis into pharma, legal, academic, market, and regulatory research formats." },
+  { icon: Braces, title: "Structured outputs", desc: "Export briefs, evidence tables, citation maps, and JSON-ready reports for downstream tools." },
 ];
 
 export default function FeatureCards() {
   return (
     <section className="py-24 px-4 border-t border-border">
-      <div className="max-w-4xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+      <div className="max-w-5xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-2xl md:text-3xl font-bold text-foreground text-center mb-16"
+          className="text-center mb-14"
         >
-          Why PromptWise
-        </motion.h2>
+          <p className="text-sm text-muted-foreground mb-3 font-medium uppercase tracking-widest">
+            Why PromptWise
+          </p>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+            More than search. More than summarization.
+          </h2>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {features.map((f, i) => {
-            const Icon = f.icon;
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map((feature, i) => {
+            const Icon = feature.icon;
             return (
               <motion.div
-                key={f.title}
-                initial={{ opacity: 0, y: 30 }}
+                key={feature.title}
+                initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ delay: i * 0.06 }}
                 className="rounded-xl border border-border bg-card p-6 hover:border-muted-foreground/30 transition-colors"
               >
-                <Icon className="w-5 h-5 text-foreground mb-4" />
-                <h3 className="text-sm font-semibold text-foreground mb-2">{f.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+                <Icon className="w-5 h-5 text-primary mb-4" />
+                <h3 className="text-sm font-semibold text-foreground mb-2">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
               </motion.div>
             );
           })}

@@ -24,7 +24,7 @@ export default function InputBar({ value, onChange, onSubmit, loading, disabled,
       {limitExceeded && (
         <div className="mb-2 flex items-center justify-between bg-card border border-border rounded-xl px-4 py-2.5 shadow-sm">
           <p className="text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground">Limit reached.</span> Enjoy unlimited recommendations with{" "}
+            <span className="font-semibold text-foreground">Limit reached.</span> Unlock unlimited research runs with{" "}
             <span className="text-foreground font-semibold">Pro</span>
           </p>
           <button
@@ -45,7 +45,7 @@ export default function InputBar({ value, onChange, onSubmit, loading, disabled,
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={limitExceeded ? "Daily limit reached — upgrade for unlimited recommendations" : "Describe what you want to buy and why..."}
+          placeholder={limitExceeded ? "Daily limit reached - upgrade for unlimited research" : "Ask about papers, patents, trials, filings, or market signals..."}
           rows={1}
           disabled={loading || disabled}
           onClick={() => { if (limitExceeded) onShowLimit?.(); }}
@@ -58,9 +58,9 @@ export default function InputBar({ value, onChange, onSubmit, loading, disabled,
               if (value.trim() && !loading) onSubmit();
             }}
             disabled={(!value.trim() || loading) && !limitExceeded}
-            className="w-8 h-8 rounded-full bg-foreground flex items-center justify-center hover:bg-foreground/85 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="w-8 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-primary/85 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            <ArrowUp className="w-4 h-4 text-background" />
+            <ArrowUp className="w-4 h-4 text-primary-foreground" />
           </button>
         </div>
       </div>

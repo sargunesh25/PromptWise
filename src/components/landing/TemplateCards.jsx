@@ -1,54 +1,64 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Pen, Code2, Briefcase, Image, Search, Megaphone } from "lucide-react";
+import {
+  ArrowUpRight,
+  BadgeCheck,
+  BriefcaseBusiness,
+  Building2,
+  FileText,
+  FlaskConical,
+  GraduationCap,
+} from "lucide-react";
 
-const templates = [
-  { category: "Laptops", icon: Code2, preview: "Best laptop under a budget for coding, battery, and daily use..." },
-  { category: "Skincare", icon: Pen, preview: "Find the right product for oily skin, acne control, and sensitivity..." },
-  { category: "Headphones", icon: Image, preview: "Office + travel picks balancing comfort, ANC, and mic quality..." },
-  { category: "Shoes", icon: Briefcase, preview: "Running + daily wear options with cushioning and durability..." },
-  { category: "Smartwatches", icon: Search, preview: "Fitness tracking with battery and display priorities..." },
-  { category: "Home Appliances", icon: Megaphone, preview: "Value-for-money picks with warranty, energy, and capacity..." },
+const workflows = [
+  { category: "Pharma R&D", icon: FlaskConical, preview: "Literature, trial, patent, FDA, and news synthesis for drug programs." },
+  { category: "Patent & Legal", icon: BadgeCheck, preview: "Prior art, patent families, filings, and market activity in one brief." },
+  { category: "Academic Teams", icon: GraduationCap, preview: "Evidence tables, field mapping, citation trails, and research gaps." },
+  { category: "Market Research", icon: Building2, preview: "SEC filings, news, competitor moves, and analyst-ready summaries." },
+  { category: "Regulatory", icon: FileText, preview: "Clinical, government, safety, and compliance signals with provenance." },
+  { category: "Strategy Teams", icon: BriefcaseBusiness, preview: "Cross-source briefs for decisions that need more than web search." },
 ];
 
 export default function TemplateCards() {
   return (
     <section className="py-24 px-4">
       <div className="max-w-5xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-2xl md:text-3xl font-bold text-foreground text-center mb-16"
+          className="text-center mb-14"
         >
-          Popular decision categories
-        </motion.h2>
+          <p className="text-sm text-muted-foreground mb-3 font-medium uppercase tracking-widest">
+            Vertical workflows
+          </p>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+            Built for research teams with real source complexity
+          </h2>
+        </motion.div>
 
         <div className="relative flex flex-wrap justify-center gap-4">
-          {templates.map((t, i) => {
-            const Icon = t.icon;
+          {workflows.map((workflow, i) => {
+            const Icon = workflow.icon;
             return (
               <motion.div
-                key={t.category}
-                initial={{ opacity: 0, y: 40 }}
+                key={workflow.category}
+                initial={{ opacity: 0, y: 34 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
+                transition={{ duration: 0.45, delay: i * 0.06 }}
                 whileHover={{ y: -4 }}
-                className="w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] rounded-xl border border-border bg-card p-5 cursor-pointer group hover:border-muted-foreground/30 transition-all"
-                style={{ zIndex: templates.length - i }}
+                className="w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] rounded-xl border border-border bg-card p-5 cursor-default group hover:border-muted-foreground/30 transition-all"
               >
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-[11px] font-medium text-muted-foreground bg-accent px-2.5 py-1 rounded-full">
-                    {t.category}
+                    {workflow.category}
                   </span>
                   <ArrowUpRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
                 <div className="flex items-start gap-3">
                   <Icon className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                    {t.preview}
-                  </p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{workflow.preview}</p>
                 </div>
               </motion.div>
             );

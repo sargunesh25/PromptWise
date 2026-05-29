@@ -16,6 +16,16 @@ export default function Landing() {
 
   useEffect(() => {
     if (isLoadingAuth) return;
+    const shouldStayOnLanding =
+      typeof window !== "undefined" &&
+      window.sessionStorage.getItem("post_logout_landing") === "1";
+
+    if (shouldStayOnLanding) {
+      window.sessionStorage.removeItem("post_logout_landing");
+      setChecked(true);
+      return;
+    }
+
     if (isAuthenticated) {
       navigate("/app", { replace: true });
     } else {
