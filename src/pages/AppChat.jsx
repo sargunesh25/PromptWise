@@ -2,17 +2,43 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/layout/Navbar";
 import Sidebar from "../components/chat/Sidebar";
 import EmptyState from "../components/chat/EmptyState";
+import MessageList from "../components/chat/MessageList";
 import InputBar from "../components/chat/InputBar";
 import { AnimatePresence, motion } from "framer-motion";
+import { invokeDecisionEngine } from "../api/decisionEngineClient";
 
 export default function AppChat() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [input, setInput] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
   const chats = [];
   const activeChatId = null;
 
   const handleNewChat = () => {
     setInput("");
+    setMessages([]);
+  };
+
+  const handleSend = async () => {
+    if (!input.trim() || loading) return;
+    const userMessage = input.trim();
+    setInput("");
+    setLoading(true);
+
+    const userMsg = { role: "user", content: userMessage, type: "text" };
+    setMessages((prev) => [...prev, userMsg]);
+
+    try {
+      const response = await invokeDecisionEngine({ message: userMessage });
+      const content = response?.content || "No recommendations returned.";
+      setMessages((prev) => [...prev, { role: "assistant", content, type: "text" }]);
+    } catch (error) {
+      const errorMsg = "Failed to fetch recommendations. Try again.";
+      setMessages((prev) => [...prev, { role: "assistant", content: errorMsg, type: "text" }]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const [isMobile, setIsMobile] = useState(
@@ -58,16 +84,35 @@ export default function AppChat() {
         </AnimatePresence>
 
         <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
-          <EmptyState />
-          <InputBar
-            value={input}
-            onChange={setInput}
-            onSubmit={() => {}}
-            loading={false}
-            disabled
-            limitExceeded={false}
-            onShowLimit={() => {}}
-          />
+          {messages.length === 0 && !loading ? (
+            <>
+              <EmptyState />
+              <InputBar
+                value={input}
+                onChange={setInput}
+                onSubmit={handleSend}
+                loading={loading}
+                limitExceeded={false}
+                onShowLimit={() => {}}
+              />
+            </>
+          ) : (
+            <>
+              <MessageList
+                messages={messages}
+                loading={loading}
+                onQuizComplete={null}
+              />
+              <InputBar
+                value={input}
+                onChange={setInput}
+                onSubmit={handleSend}
+                loading={loading}
+                limitExceeded={false}
+                onShowLimit={() => {}}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -12,7 +12,7 @@ export default function EmptyState() {
         What are you shopping for today?
       </h2>
       <p className="mt-3 text-sm text-muted-foreground max-w-sm text-center leading-relaxed">
-        The decision engine is being rebuilt. UI only for now.
+        Share your need, budget, and priorities. I will return the top brands and best picks.
       </p>
     </motion.div>
   );
